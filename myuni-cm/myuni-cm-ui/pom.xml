@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>myuni-cm-ui</artifactId>
+	<packaging>jar</packaging>
+	<name>myuni CM UI</name>
+	<description>myuni CM UI module</description>
+	<parent>
+		<groupId>edu.myuni.ks.cm</groupId>
+		<artifactId>myuni-cm</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
+	<properties>
+	</properties>
+	<dependencies>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.2.0.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>${selenium.pattern}</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<profiles>
+		<profile>
+			<!-- Profile used to build the gwt war for running dev mode in myuni-cm-embedded -->
+			<id>build-codehaus-gwt</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<configuration>
+							<webappDirectory>target/${project.artifactId}-webapp</webappDirectory>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>compile</phase>
+								<goals>
+									<goal>war</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<version>2.1</version>
+					</plugin>
+				</plugins>
+			</build>
+
+			<!-- Required dependencies for testing lum-ui -->
+			<dependencies>
+				<dependency>
+					<groupId>org.kuali.student.core</groupId>
+					<artifactId>ks-cxf</artifactId>
+					<version>${ks.core.version}</version>
+					<type>pom</type>
+					<scope>runtime</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-aop</artifactId>
+					<scope>runtime</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-aspects</artifactId>
+					<scope>runtime</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-web</artifactId>
+					<scope>runtime</scope>
+				</dependency>
+
+				<!-- core-impl used to get mock message service impl -->
+				<dependency>
+					<groupId>org.kuali.student.core</groupId>
+					<artifactId>ks-core-impl</artifactId>
+					<version>${ks.core.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>com.oracle</groupId>
+					<artifactId>ojdbc14</artifactId>
+					<version>${oracle.ojdbc.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.kuali.rice</groupId>
+					<artifactId>rice-impl</artifactId>
+				</dependency>
+				<dependency>
+					<groupId>org.kuali.student.core</groupId>
+					<artifactId>ks-standard-sec</artifactId>
+					<version>${ks.core.version}</version>
+				</dependency>
+
+				<!-- KSCM-1016 -->
+				<dependency>
+					<groupId>edu.myuni.ks.cm</groupId>
+					<artifactId>myuni-cm-impl</artifactId>
+					<version>${project.version}</version>
+				</dependency>
+			</dependencies>
+		</profile>
+
+
+
+
+	</profiles>
+</project>

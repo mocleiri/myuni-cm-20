@@ -1,0 +1,48 @@
+<settings xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
+	<localRepository />
+	<interactiveMode />
+	<usePluginRegistry />
+	<offline />
+	<pluginGroups />
+	<servers/>
+ 
+	<proxies />
+
+	<activeProfiles>
+		<activeProfile>kuali-developer-properties</activeProfile>
+	</activeProfiles>
+
+
+	<profiles>
+
+		<profile>
+			<id>kuali-developer-properties</id>
+			<properties>
+				<myuni.gwt.module.lum>edu.myuni.ks.cm.ui.main.myuniCMMainFirefox</myuni.gwt.module.lum>
+				<ks.gwt.compile.draftCompile>true</ks.gwt.compile.draftCompile>
+				<ks.gwt.compile.soyc>false</ks.gwt.compile.soyc>
+				<ks.gwt.compile.style>PRETTY</ks.gwt.compile.style>
+				<ks.gwt.module.org>org.kuali.student.core.organization.ui.OrgEntryFirefox</ks.gwt.module.org>
+				<ks.gwt.module.lum>org.kuali.student.lum.lu.ui.main.LUMMainFirefox</ks.gwt.module.lum>
+			</properties>
+			<repositories>
+				<repository>
+					<id>kuali.nexus</id>
+					<name>Nexus Repository Manager</name>
+					<url>http://nexus.kuali.org/content/groups/public</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+
+		</profile>
+	</profiles>
+
+
+</settings>

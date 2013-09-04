@@ -1,0 +1,65 @@
+<config>
+ 
+ 
+	<param name="application.id">MYUNI</param> <!-- shows on service bus -->
+	<param name="app.context.name">myuni</param>
+	<param name="appserver.url">http://localhost:8080</param>
+	<param name="lum.application.url">http://localhost:8080/myuni</param>
+	<param name="umd.cm.sis.enablePushToSis">true</param>
+	<param name="app.code">myuni-with-rice-embedded-dev</param>
+ 
+	<!-- URL where CM is publishing its services. Rice will talk back to
+	    services CM registers on the KSB bus using this URL 
+	 -->
+	<param name="serviceServletUrl">http://localhost:8080/myuni</param>
+	
+	 <!-- This parameter is used to connect to the rice service bus (KSB).
+	 	  This lets us talk with Rice and other apps over the bus.
+	 	  In CM2.0, this is at /services.  You should test this URL by 
+	 	  going to it in your web browser and appending ?wsdl to the end.
+	 	  If should not require you to login to the app and should show
+	 	  an XML WSDL.
+	  -->
+  <param name="rice.ksb.registry.serviceUrl">http://localhost:8081/ks-rice-standalone-dev/services/soap/ksb/v2_0/serviceRegistry</param>
+  
+ 
+	<!-- MAIN PAGE DROPDOWN BOX -->
+	<!-- The ks.rice.url variable specifies the URL the link will go to -->
+	<!-- The doc search and action list also use this as the base URL -->
+	<param name="ks.rice.url">http://localhost:8081/ks-rice-standalone-dev</param>
+
+	<!-- Database -->
+	
+    <param name="datasource.url">jdbc:oracle:thin:@localhost:1521:XE</param>
+	<param name="datasource.username">CMMYUNI</param>
+	<param name="datasource.password">CMMYUNI</param>
+	
+	<param name="ks.lum.datasource.url">jdbc:oracle:thin:@localhost:1521:XE</param>
+	<param name="ks.lum.datasource.username">CMMYUNI</param>
+	<param name="ks.lum.datasource.password">CMMYUNI</param>
+
+	<param name="ks.core.datasource.url">jdbc:oracle:thin:@localhost:1521:XE</param>
+	<param name="ks.core.datasource.username">CMMYUNI</param>
+	<param name="ks.core.datasource.password">CMMYUNI</param>
+
+
+	<!-- Optional Params -->
+	<param name="datasource.ojb.platform">Oracle9i</param>
+	<param name="datasource.driver.name">oracle.jdbc.driver.OracleDriver</param>
+
+   	<!-- Keystore Security settings  -->
+    <param name="keystore.alias">rice</param>
+    <param name="keystore.password">r1c3pw</param>  
+    <param name="encryption.key" override="false">7IC64w6kAAAA</param>      
+    <param name="keystore.location">C:/Users/cmann/kuali/main/myuni20/rice.keystore</param>
+    <param name="keystore.file">C:/Users/cmann/kuali/main/myuni20/rice.keystore</param>
+    
+	
+ 
+	<!-- p6spy driver override. Place at bottom of config file 
+	<param name="datasource.driver.name">com.p6spy.engine.spy.P6SpyDriver</param>
+	<param name="ks.lum.datasource.driver.name">com.p6spy.engine.spy.P6SpyDriver</param>
+	<param name="ks.core.datasource.driver.name">com.p6spy.engine.spy.P6SpyDriver</param>
+	-->
+
+</config>

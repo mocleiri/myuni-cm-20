@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!-- Config file used by developers. Compiled for firefox only. -->
+
+<module rename-to="org.kuali.student.lum.lu.ui.main.LUMMain">
+
+	<inherits name="org.kuali.student.lum.lu.ui.main.LumUI" />
+  	<set-property name="user.agent" value="gecko1_8" />
+	<set-property name="locale" value="default" />
+
+	<entry-point
+		class="org.kuali.student.lum.lu.ui.main.client.LUMMainEntryPoint" />
+
+
+</module>

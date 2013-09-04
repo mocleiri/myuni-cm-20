@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:search="http://student.kuali.org/xsd/search-extension"
+	xmlns:dict="http://student.kuali.org/xsd/dictionary-extension"
+	xsi:schemaLocation="
+	http://student.kuali.org/xsd/search-extension http://student.kuali.org/xsd/search-extension/search-extension.xsd
+	http://student.kuali.org/xsd/dictionary-extension http://student.kuali.org/xsd/dictionary-extension/dictionary-extension.xsd
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	 ">
+	<import resource="classpath:lo-search-config.xml" />
+
+	<search:searchType id="lo.search.loByCategoryCluCrossSearch">
+        <search:name>LO Search for all LOs and related Clus matching category name</search:name>
+        <search:desc>Returns all matching LOs ids and related Clu ids and codes</search:desc>
+        <search:searchResultTypeInfo>
+        	<ref bean="lo.result.loCluByCategory" />
+        </search:searchResultTypeInfo>
+        <search:searchCriteriaTypeInfo>
+        	<!-- Note this doesn't include all the criteria, b/c it would need to reference lu context -->
+        	<ref bean="lo.criteria.byOptionalCategoryName"/>
+        </search:searchCriteriaTypeInfo>
+	</search:searchType>
+	
+	<search:searchCriteriaTypeInfo id="lo.criteria.byOptionalCategoryName" parent="lo.criteria.byOptionalCategoryName-parent"/>
+	<search:searchCriteriaTypeInfo id="lo.criteria.byOptionalCategoryName-parent"  abstract="true">
+		<search:name>LoByCategoryCriteria</search:name>
+		<search:queryParams>
+			<ref bean="lo.queryParam.loOptionalCategoryName" />
+			<ref bean="lo.queryParam.loDescPlainNative" />
+			<ref bean="lo.queryParam.luOptionalCodeNative" />
+			<ref bean="lo.queryParam.luOptionalLongNameNative" />
+			<ref bean="lo.queryParam.luOptionalAdminOrgIdsNative" />
+			<ref bean="lo.queryParam.luOptionalAdminOrgTypesNative" />
+			<ref bean="lo.queryParam.luOptionalTypeNative" />
+			<ref bean="lo.queryParam.luOptionalStateNative" />
+			<ref bean="lo.queryParam.groupCategories" />
+		</search:queryParams>
+	</search:searchCriteriaTypeInfo>
+	
+	<search:queryParam id="lo.queryParam.loDescPlainNative" optional="true">
+		<dict:fieldDescriptor>
+			<dict:name>Lo Description Plain</dict:name>
+			<dict:desc>Lo Description Plain</dict:desc>
+			<dict:dataType>string</dict:dataType>
+		</dict:fieldDescriptor>
+	</search:queryParam>
+	
+	<search:queryParam id="lo.queryParam.luOptionalCodeNative" optional="true">
+		<dict:fieldDescriptor>
+			<dict:name>Clu Code</dict:name>
+			<dict:desc>Clu Code</dict:desc>
+			<dict:dataType>string</dict:dataType>
+		</dict:fieldDescriptor>
+	</search:queryParam>
+
+	<search:queryParam id="lo.queryParam.luOptionalLongNameNative" optional="true">
+		<dict:fieldDescriptor>
+			<dict:name>Clu Long Name</dict:name>
+			<dict:desc>Clu Long Name</dict:desc>
+			<dict:dataType>string</dict:dataType>
+		</dict:fieldDescriptor>
+	</search:queryParam>
+
+	<search:queryParam id="lo.queryParam.luOptionalAdminOrgIdsNative" optional="true">
+		<dict:fieldDescriptor>
+			<dict:name>Clu Admin Org Ids</dict:name>
+			<dict:desc>Clu Admin Org Ids</dict:desc>
+			<dict:dataType>string</dict:dataType>
+		</dict:fieldDescriptor>
+	</search:queryParam>
+
+	<search:queryParam id="lo.queryParam.luOptionalAdminOrgTypesNative" optional="true">
+		<dict:fieldDescriptor>
+			<dict:name>Clu Admin Org Types</dict:name>
+			<dict:desc>Clu Admin Org Types</dict:desc>
+			<dict:dataType>string</dict:dataType>
+		</dict:fieldDescriptor>
+	</search:queryParam>
+
+	<search:queryParam id="lo.queryParam.luOptionalTypeNative" optional="true">
+		<dict:fieldDescriptor>
+			<dict:name>Clu Type</dict:name>
+			<dict:desc>Clu Type</dict:desc>
+			<dict:dataType>string</dict:dataType>
+		</dict:fieldDescriptor>
+	</search:queryParam>	
+
+	<search:queryParam id="lo.queryParam.luOptionalStateNative" optional="true">
+		<dict:fieldDescriptor>
+			<dict:name>Clu State</dict:name>
+			<dict:desc>Clu State</dict:desc>
+			<dict:dataType>string</dict:dataType>
+		</dict:fieldDescriptor>
+	</search:queryParam>
+	
+	<bean id="queryMap" parent="queryMap-parent">
+		<property name="sourceMap">
+			<map merge="true">
+				<entry key="lo.search.loByCategoryCluCrossSearch">
+					<value>NATIVE:SELECT lo.id lo_id, clu.id clu_id, officialIdentifier.cd, lodesc.plain, clu.LUTYPE_ID, clu.st, cat.name, NULL FROM KSLU_CLU clu, KSLU_CLU_LO_RELTN jn, KSLO_LO lo, KSLU_CLU_IDENT officialIdentifier, KSLO_RICH_TEXT_T lodesc, KSLO_LO_JN_LOCATEGORY jncat, KSLO_LO_CATEGORY cat WHERE jn.LO_ID = lo.ID AND lodesc.ID = lo.RT_DESCR_ID AND clu.OFFIC_CLU_ID = officialIdentifier.ID AND lo.id = jncat.lo_id(+) AND jn.CLU_ID = clu.ID AND cat.id(+) = jncat.locategory_id</value>
+				</entry>
+							
+				<entry key="lo.queryParam.loDescPlainNative">
+					<value>(LOWER(lodesc.plain) LIKE '%' || LOWER(:lo_queryParam_loDescPlainNative) || '%' OR LOWER(lodesc.plain) LIKE LOWER(:lo_queryParam_loDescPlainNative) || '%')</value>
+				</entry>
+				
+				<entry key="lo.queryParam.luOptionalCodeNative">
+					<value>(LOWER(officialIdentifier.cd) LIKE '%' || LOWER(:lo_queryParam_luOptionalCodeNative) || '%' OR LOWER(officialIdentifier.cd) LIKE LOWER(:lo_queryParam_luOptionalCodeNative) || '%')</value>
+				</entry>
+			
+				<entry key="lo.queryParam.luOptionalLongNameNative">
+					<value>(LOWER(officialIdentifier.LNG_NAME) LIKE '%' || LOWER(:lo_queryParam_luOptionalLongNameNative) || '%' OR LOWER(officialIdentifier.LNG_NAME) LIKE LOWER(:lo_queryParam_luOptionalLongNameNative) || '%')</value>
+				</entry>
+			
+				<entry key="lo.queryParam.luOptionalAdminOrgIdsNative">
+					<value>EXISTS (SELECT * FROM KSLU_CLU_ADMIN_ORG where ORG_ID IN (:lo_queryParam_luOptionalAdminOrgIdsNative) AND CLU_ID = clu.ID)</value>
+				</entry>
+			
+				<entry key="lo.queryParam.luOptionalAdminOrgTypesNative">
+					<value>EXISTS (SELECT * FROM KSLU_CLU_ADMIN_ORG where TYPE IN (:lo_queryParam_luOptionalAdminOrgTypesNative) AND CLU_ID = clu.ID)</value>
+				</entry>
+			
+				<entry key="lo.queryParam.luOptionalTypeNative">
+					<value>clu.LUTYPE_ID IN (:lo_queryParam_luOptionalTypeNative)</value>
+				</entry>
+				
+				<entry key="lo.queryParam.luOptionalStateNative">
+					<value>clu.ST IN (:lo_queryParam_luOptionalStateNative)</value>
+				</entry>				
+			</map>
+		</property>
+	</bean>
+</beans>

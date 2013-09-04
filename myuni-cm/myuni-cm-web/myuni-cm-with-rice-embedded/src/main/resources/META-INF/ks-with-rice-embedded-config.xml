@@ -1,0 +1,166 @@
+   
+ 
+<!--
+
+    Copyright 2010 The Kuali Foundation Licensed under the
+    Educational Community License, Version 2.0 (the "License"); you may
+    not use this file except in compliance with the License. You may
+    obtain a copy of the License at
+
+    http://www.osedu.org/licenses/ECL-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an "AS IS"
+    BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+    or implied. See the License for the specific language governing
+    permissions and limitations under the License.
+
+-->
+
+<config>
+ 
+    <param name="config.location">classpath:META-INF/common-config-defaults.xml</param>
+    <param name="config.location">classpath:META-INF/common-config-locations.xml</param>
+
+    <param name="config.location">classpath:META-INF/ks-core-config.xml</param>
+    <param name="config.location">classpath:META-INF/ks-lum-config.xml</param>
+    <param name="config.location">classpath:ks-security-config.xml</param>
+    
+    <param name="module.name">myuni-cm-with-rice-embedded</param>
+    <param name="db.vendor">oracle</param>
+    <param name="jpa.vendor">hibernate</param>
+
+    <param name="app.code">myuni-cm-with-rice-embedded</param>
+    <param name="application.id">ks-with-rice-embedded</param>
+    <param name="appserver.url">http://localhost:8081</param>
+	
+    <param name="serviceNamespace">myuni-cm-with-rice-embedded</param>
+    <param name="rice.ksb.loadKNSModuleConfiguration">false</param>
+    <param name="rice.logging.configure">true</param>
+    <param name="log4j.settings.path">classpath:log4j.properties</param>
+	
+    <!-- this is dev only parameter, currently can't create quartz tables with jpa -->
+    <param name="useQuartzDatabase">false</param>
+
+    <!-- Datasource Configuration -->
+
+    <param name="rice.ksb.registry.jpa.PersistenceXmlLocation">META-INF/ks-ksb-persistence.xml</param>
+    <param name="rice.ksb.registry.jpa.PersistenceUnitName.derby">ksb-registry-identity-unit</param>
+    <param name="rice.ksb.registry.jpa.PersistenceUnitName.oracle">ksb-registry-sequence-unit</param>
+    <param name="rice.ksb.registry.jpa.PersistenceUnitName">${rice.ksb.registry.jpa.PersistenceUnitName.${db.vendor}}</param>
+    <param name="rice.ksb.registry.jpa.GenerateDdl">false</param>
+    
+    <param name="rice.ksb.message.jpa.PersistenceXmlLocation">META-INF/ks-ksb-persistence.xml</param>
+    <param name="rice.ksb.message.jpa.PersistenceUnitName.derby">ksb-message-identity-unit</param>
+    <param name="rice.ksb.message.jpa.PersistenceUnitName.oracle">ksb-message-sequence-unit</param>
+    <param name="rice.ksb.message.jpa.PersistenceUnitName">${rice.ksb.message.jpa.PersistenceUnitName.${db.vendor}}</param>
+    <param name="rice.ksb.message.jpa.GenerateDdl">false</param>
+	
+	<param name="rice.jpa.JpaProperties.hibernate.transaction.manager_lookup_class">org.hibernate.transaction.JOTMTransactionManagerLookup</param>    
+    <!-- can't validate because of bad clob vs varchar in rice annotations -->
+    <!-- 
+    <param name="rice.ksb.registry.jpa.JpaProperties.hibernate.hbm2ddl.auto">validate</param>
+    <param name="rice.ksb.message.jpa.JpaProperties.hibernate.hbm2ddl.auto">validate</param>
+    -->
+    
+    <!-- these are defaulted to false already, helpful to turn on for debug -->
+    <param name="rice.jpa.JpaProperties.hibernate.show_sql">false</param>
+    <param name="rice.jpa.JpaProperties.hibernate.use_sql_comments">false</param>
+    <param name="rice.jpa.JpaProperties.hibernate.format_sql">false</param>
+
+    <param name="rice.jpa.UseSerialization">false</param>
+
+    <param name="datasource.ojb.platform">Oracle9i</param>
+    
+    <param name="rice.ksb.jpa.enabled.oracle">true</param>
+    <param name="rice.jpa.DatabasePlatform.oracle">org.hibernate.dialect.Oracle10gDialect</param>
+	<param name="datasource.driver.name.oracle">oracle.jdbc.OracleDriver</param>
+	<param name="datasource.url.oracle">jdbc:oracle:thin:@localhost:1521:XE</param>
+	<param name="datasource.username.oracle">ricemyuni</param>
+	<param name="datasource.password.oracle">ricemyuni</param>
+	<param name="datasource.pool.validationQuery.oracle">select 1 from dual</param>  
+	
+	<param name="rice.jpa.DatabasePlatform">${rice.jpa.DatabasePlatform.${db.vendor}}</param>
+    <param name="rice.ksb.jpa.enabled">${rice.ksb.jpa.enabled.${db.vendor}}</param>
+	<param name="datasource.driver.name">${datasource.driver.name.${db.vendor}}</param>
+	<param name="datasource.url">${datasource.url.${db.vendor}}</param>
+	<param name="datasource.username">${datasource.username.${db.vendor}}</param>
+	<param name="datasource.password">${datasource.password.${db.vendor}}</param>
+	<param name="datasource.pool.validationQuery">${datasource.pool.validationQuery.${db.vendor}}</param>
+    
+    <param name="datasource.pool.maxWait">600</param>
+    <param name="datasource.pool.size">5</param>
+    <param name="datasource.pool.maxSize">10</param>
+    <param name="datasource.pool.minSize">10</param> 
+
+
+    <!-- Keystore Configuration -->
+    <param name="keystore.file">${user.home}/rice.keystore</param>
+    <param name="keystore.alias">rice</param>
+    <param name="keystore.password">r1c3pw</param>
+
+    <!-- run modes -->
+    <param name="ksb.mode">THIN</param>
+
+ 
+    <param name="ks.rice.label">RICE</param>
+    <param name="ks.rice.url">http://localhost:8080/kr-${environment}</param>
+    <param name="rice.server.url">${ks.rice.url}</param>
+    <!-- Set all *CM* services to /services instead of /remoting -->
+    <!-- All Rice services should remain /remoting -->
+    <param name="serviceServletUrl">${application.url}/services/</param>
+    <param name="rice.ksb.registry.serviceUrl">${rice.server.url}/remoting/soap/ksb/v2_0/serviceRegistry</param>
+
+    <!-- Rice URLS --> 
+	<param name="ks.rice.personLookup.serviceAddress">${ks.rice.url}/kr/lookup.do</param>
+	<param name="ks.rice.actionList.serviceAddress">${ks.rice.url}/kew/ActionList.do</param>
+    <param name="ks.rice.docSearch.serviceAddress">${ks.rice.url}/kew/DocumentSearch.do</param>
+    
+    
+    <!-- KS Urls -->
+    <param name="ks.logout.url" override="false">${application.url}/j_spring_security_logout</param>
+
+    <!-- OrgUrls -->
+    <param name="ks.org.MainEntryPoint" override="false">${application.url}/org.kuali.student.core.organization.ui.OrgEntry/OrgEntry.jsp</param>
+
+    <!-- LumUrls -->
+    <param name="lum.application.url" override="false">${application.url}</param>
+    <param name="ks.lum.MainEntryPoint" override="false">${lum.application.url}/org.kuali.student.lum.lu.ui.main.LUMMain/LUMMain.jsp</param>
+    
+    <!-- system params for derby network version -->
+    <param name="derby.system.home" system="true" override="false">target</param>
+    <param name="derby.drda.startNetworkServer" system="true" override="false">true</param>
+    
+    <!-- KS caching config -->
+    <param name="ks.cache.config.file">classpath:ks-ehcache.xml</param>
+    <param name="ks.enum.enable.caching">true</param>
+    <param name="ks.atp.enable.caching">true</param>
+    <param name="ks.org.enable.caching">true</param>
+    <param name="ks.lrc.enable.caching">true</param>
+    <param name="ks.statement.enable.caching">true</param>
+
+    <param name="ks.lum.gwt.cache.config.file">classpath:ks-lum-gwt-ehcache.xml</param>
+    <param name="ks.lum.gwt.metadata.enable.caching">true</param>
+
+
+    <!-- myuni persistence unit for our unit/prefix tables -->
+    <!-- use 'myuniOrganization' for non-local schema -->
+    <param name="myuni.cm.sis.siscmSchemaName">SISCM</param> 
+    <param name="myuni.cm.sis.whadminSchemaName">WHADMIN</param> 
+    <param name="myuni.cm.organization.persistenceUnit">myuniOrganization</param>
+    <param name="myuni.cm.sis.persistenceUnit">sis</param>
+    <param name="myuni.cm.sis.enablePushToSis">false</param>
+    <param name="myuni.cm.sis.enableWFDoc">true</param>
+
+    <!-- Config defaults and overrides -->
+    <param name="config.location">${user.home}/kuali/main/${environment}/myuni-cm-with-rice-embedded-config.xml</param>
+    <param name="config.location">${rice.additionalSpringFiles}</param>
+    <param name="config.location">${myuni.cm.additional.config.locations}</param>
+    
+    
+    
+    <param name="ks.lum.dictionary.serviceContextLocations">classpath:ks-courseInfo-dictionary-context.xml, classpath:ks-programInfo-dictionary-context.xml, classpath:ks-statement-dictionary-context.xml, classpath:ks-lrc-dictionary-context.xml, classpath:myuni-cm-courseInfo-dictionary-context.xml, classpath:myuni-cm-programInfo-dictionary-context.xml, classpath:myuni-cm-clusetInfo-dictionary-context.xml, classpath:myuni-cm-cluset-ui-object-dictionary-context.xml, classpath:myuni-cm-base-dictionary-context.xml</param>    
+	<param name="ks.lum.ui.lookupContextLocations">classpath:myuni-cm-ui-lookup-context.xml</param>
+	<param name="ks.core.dictionary.serviceContextLocations">classpath:ks-proposalInfo-dictionary-context.xml, classpath:ks-workflow-dictionary-context.xml, classpath:ks-document-dictionary-context.xml, classpath:ks-comment-dictionary-context.xml, classpath:ks-atp-dictionary-context.xml, classpath:ks-lrc-dictionary-context.xml, classpath:myuni-cm-proposalInfo-dictionary-context.xml, classpath:myuni-cm-clusetInfo-dictionary-context.xml, classpath:myuni-cm-cluset-ui-object-dictionary-context.xml, classpath:myuni-cm-base-dictionary-context.xml, classpath:myuni-cm-statement-dictionary-context.xml</param>
+     
+</config>

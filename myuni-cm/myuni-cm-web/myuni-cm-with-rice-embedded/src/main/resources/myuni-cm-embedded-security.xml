@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2010 The Kuali Foundation Licensed under the Educational Community 
+	License, Version 2.0 (the "License"); you may not use this file except in 
+	compliance with the License. You may obtain a copy of the License at http://www.osedu.org/licenses/ECL-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License. -->
+
+<!-- This file is myunis version of ks-spring-security-cas.xml file -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jaxws="http://cxf.apache.org/jaxws" xmlns:cxf="http://cxf.apache.org/core"
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+  	http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+  	http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
+
+	<import resource="ksss-auth-common.xml" />
+
+   	<bean id="configProperties" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+   		<property name="targetObject" ref="bootstrapConfig" />
+   		<property name="targetMethod" value="getProperties" />
+   	</bean>
+     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+   		<property name="properties" ref="configProperties" />
+   	</bean>
+   	<bean id="bootstrapConfig" class="org.kuali.rice.core.impl.config.property.ConfigFactoryBean">
+   		<property name="configLocations">
+   			<list>
+   				<value>classpath:META-INF/ks-with-rice-embedded-config.xml</value>
+                <value>classpath:META-INF/build-details.xml</value>
+ 		</list>
+   		</property>
+   	</bean>
+   	
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="staticMethod" value="org.kuali.rice.core.impl.config.property.ConfigInitializer.initialize" />
+		<property name="arguments">
+			<list><ref bean="bootstrapConfig"/></list>
+		</property>
+	</bean>
+  
+    <!-- Disable CAS auth at these URLs so services work  -->
+  	<security:http pattern="/remoting/**" security="none"/>
+	<security:http pattern="/auth/**" security="none"/>	 
+	<security:http pattern="/services/**" security="none"/> 
+	 	
+	<security:http auto-config="false" entry-point-ref="casEntryPoint">
+	    <security:form-login login-page="/login.jsp" />
+ 		<security:custom-filter ref="ksLogoutFilter" position="LOGOUT_FILTER" />
+ 		<security:custom-filter position="CAS_FILTER" ref="casFilter" />
+		<security:custom-filter ref="authenticationGwtRpcFilter" after="CAS_FILTER" />
+		<security:custom-filter ref="switchUserProcessingFilter" position="SWITCH_USER_FILTER" />
+ 
+		<security:intercept-url pattern="/admin/**" access="ROLE_KS_ADMIN"/>
+		<!-- used for backdoor login 		-->
+		<security:intercept-url pattern="/j_spring_security_switch_user*" access="ROLE_KS_BACKDOOR"/>
+		<security:intercept-url pattern="/org.kuali.student.lum.lu.ui.main.LUMMain/**" access="ROLE_KS_USER,ROLE_KS_ADMIN"/>
+		<security:intercept-url pattern="/portal*" access="ROLE_KS_USER,ROLE_KS_ADMIN"/>
+		<security:intercept-url pattern="/kew/**" access="ROLE_KS_USER,ROLE_KS_ADMIN"/>
+        <security:intercept-url pattern="/**" access="ROLE_KS_USER" />
+	</security:http>
+
+
+
+	<bean id="serviceProperties" class="org.springframework.security.cas.ServiceProperties">
+		<property name="service"
+			value="${ks.default.security.cas.webapp.service.context}/j_spring_cas_security_check" />
+		<property name="sendRenew" value="false" />
+	</bean>
+ 
+	
+	<bean id="casFilter"
+	      class="org.springframework.security.cas.web.CasAuthenticationFilter">
+	  <property name="authenticationManager" ref="authenticationManager"/>
+	</bean>
+	
+	<bean id="casEntryPoint"
+	    class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
+	  <property name="loginUrl" value="${ks.default.security.cas.serverAddress}/login"/>
+	  <property name="serviceProperties" ref="serviceProperties"/>
+	</bean>
+
+
+	  <security:authentication-manager alias="authenticationManager">
+	    <security:authentication-provider ref="casAuthenticationProvider" />
+	  </security:authentication-manager>
+	
+	  <bean id="casAuthenticationProvider"
+	      class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
+	    <property name="userDetailsService" ref="ksRiceUserDetailsService"/>
+	    <property name="serviceProperties" ref="serviceProperties" />
+	    <property name="ticketValidator">
+	      <bean class="org.jasig.cas.client.validation.Cas20ProxyTicketValidator">
+	        <constructor-arg index="0" value="${ks.default.security.cas.serverAddress}" />
+	        </bean>
+	    </property>
+	    <property name="key" value="an_id_for_this_auth_provider_only"/>
+	  </bean>
+	 
+  
+	 <bean id="exceptionTranslationFilter"
+		class="org.springframework.security.web.access.ExceptionTranslationFilter">
+		<property name="authenticationEntryPoint" ref="casEntryPoint" />
+		<property name="accessDeniedHandler">
+			<bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+				<property name="errorPage" value="/login.jsp" />
+			</bean>
+		</property>
+	</bean>
+ 	
+	<bean id="switchUserProcessingFilter"
+		class="org.springframework.security.web.authentication.switchuser.SwitchUserFilter">
+		<property name="userDetailsService" ref="ksRiceUserDetailsService" />
+		<property name="switchUserUrl" value="/j_spring_security_switch_user" />
+		<property name="exitUserUrl" value="/j_spring_security_exit_user" />
+		<property name="targetUrl" value="${application.url}/" />
+	</bean>
+		
+	<bean id="ksLogoutFilter" class="org.kuali.student.security.filter.KSLogoutFilter" >
+		<property name="logoutSuccessUrl" value="${ks.logout.url}" />
+	</bean>
+ 
+</beans>
