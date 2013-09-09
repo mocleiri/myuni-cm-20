@@ -8,10 +8,10 @@
 	<param name="umd.cm.sis.enablePushToSis">true</param>
 	<param name="app.code">myuni-with-rice-embedded-dev</param>
  
-	<!-- URL where CM is publishing its services. Rice will talk back to
-	    services CM registers on the KSB bus using this URL 
-	 -->
-	<param name="serviceServletUrl">http://localhost:8080/myuni</param>
+	<!-- The application URL is used to specify a number of values
+    	 such as where the services are bound etc.
+	 --> 
+	 <param name="application.url">http://localhost:8080/myuni/</param>
 	
 	 <!-- This parameter is used to connect to the rice service bus (KSB).
 	 	  This lets us talk with Rice and other apps over the bus.
