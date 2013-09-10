@@ -75,8 +75,11 @@ mvn clean install -Pks-db,oracle -Dumd.cm.additional.config.locations=C:/Users/c
 
 ```
 cd /ks-201/student-2.0.1-cm/ks-deployments/ks-web/ks-rice-standalone
+set MAVEN_OPTS=-Xmx1g -Xss8m -XX:MaxPermSize=512m -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8003
 mvn -DskipTests -Pstandalone tomcat:run-war -Dadditional.config.locations=C:/Users/cmann/kuali/main/myuni20/myuni-rice-config-20.xml
 ```
+Note: Setting the MAVEN_OPTS will start the tomcat Rice is running on in debug mode (listening on port 8003).  You can then connect to it
+      using the eclipse debugger if you want to see what rice is doing (e.g. calling the post processors etc). 
 
 -  Verify it is running on URL: http://localhost:8081/ks-rice-standalone-dev/
 -  Login as 'admin' on the login screen.  If rice does not appear at that URL in your web browser, do not proceed further.  You need to fix rice first!
