@@ -15,11 +15,11 @@
  
 	<properties>
 
-		<kuali.ks.version>2.0.0-cm</kuali.ks.version>
-		<ks.api.version>2.0.0-cm</ks.api.version>
-		<ks.core.version>2.0.0-cm</ks.core.version>
-		<ks.lum.version>2.0.0-cm</ks.lum.version>
-		<ks.deployments.version>2.0.0-cm</ks.deployments.version>
+		<kuali.ks.version>2.0.1-cm</kuali.ks.version>
+		<ks.api.version>2.0.1-cm</ks.api.version>
+		<ks.core.version>2.0.1-cm</ks.core.version>
+		<ks.lum.version>2.0.1-cm</ks.lum.version>
+		<ks.deployments.version>2.0.1-cm</ks.deployments.version>
 
 		<kuali.rice.version>2.2.3</kuali.rice.version>
 	 
