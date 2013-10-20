@@ -17,4 +17,11 @@
     <param name="keystore.location">C:/Users/cmann/kuali/main/myuni20/rice.keystore</param>
     <param name="keystore.file">C:/Users/cmann/kuali/main/myuni20/rice.keystore</param>
 	
+	<!-- p6spy driver override. Place at bottom of config file 
+    <param name="datasource.driver.name">com.p6spy.engine.spy.P6SpyDriver</param>
+    <param name="ks.lum.datasource.driver.name">com.p6spy.engine.spy.P6SpyDriver</param>
+    <param name="ks.core.datasource.driver.name">com.p6spy.engine.spy.P6SpyDriver</param>
+    <param name="ks.enroll.datasource.url">com.p6spy.engine.spy.P6SpyDriver</param>
+      -->
+    
 </config>

@@ -123,10 +123,26 @@ run rice and cm in same tomcat instance in DEV and QA (they used the same variab
 - Change all directory names and files names to replace myuni with your university initials (e.g. UW, UMD, etc).
 
 
-# Debugging
+# Dump CM SQL
 
 -  Uncomment the p6spy lines at the bottom of the my-cm-config-20.xml file if you want to dump all SQL to logs / console
 
+# Dump Rice SQL
+
+- Copy spy.properties to rice dir (it will log to file c:\temp\
+```
+cp C:\Users\cmann\git\ks-loader\ks-loader\training\debug\rice\spy.properties C:\ks-201\student-2.0.1-cm\ks-deployments\ks-web\ks-rice-standalone\src\main\resources
+```
+
+- Edit C:\ks-201\student-2.0.1-cm\ks-deployments\ks-web\ks-rice-standalone and add this at the bottom of the dependencies section:
+```     
+   <dependency>
+       <groupId>p6spy</groupId>
+       <artifactId>p6spy</artifactId>
+       <version>1.3</version>
+   </dependency>
+ ```
+- Uncomment P6 lines at the bottom of C:\Users\cmann\kuali\main\myuni20\myuni-rice-config-20.xml 
 
 # Errors
 

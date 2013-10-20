@@ -1,0 +1,1 @@
+This directory contains the XML file you need to injest into rice to define the workflow route.
