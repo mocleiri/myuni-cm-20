@@ -139,7 +139,7 @@ cp C:\Users\cmann\git\ks-loader\ks-loader\training\debug\rice\spy.properties C:\
    <dependency>
        <groupId>p6spy</groupId>
        <artifactId>p6spy</artifactId>
-       <version>1.3</version>
+       <version>1.1</version>
    </dependency>
  ```
 - Uncomment P6 lines at the bottom of C:\Users\cmann\kuali\main\myuni20\myuni-rice-config-20.xml 
