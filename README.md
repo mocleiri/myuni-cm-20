@@ -66,7 +66,7 @@ see https://wiki.kuali.org/display/STUDENTDOC/%28CM+2.0%29+3.1.4+Load+the+Kuali+
 
 ```
 cd /ks-201/student-2.0.1-cm/ks-deployments/ks-cfg-dbs/ks-rice-db
-mvn clean install -Pks-db,oracle -Dumd.cm.additional.config.locations=C:/Users/cmann/kuali/main/myuni20/myuni-cm-config-20.xml -Dks.impex.url=jdbc:oracle:thin:@localhost:1521:XE -Dks.impex.dba.password=sys  -Dks.impex.dba.username="sys as sysdba" -Dks.impex.username=RICEMYUNI -Dks.impex.password=RICEMYUNI
+mvn clean install -Denforcer.skip=true -Pks-db,oracle -Dumd.cm.additional.config.locations=C:/Users/cmann/kuali/main/myuni20/myuni-cm-config-20.xml -Dks.impex.url=jdbc:oracle:thin:@localhost:1521:XE -Dks.impex.dba.password=sys  -Dks.impex.dba.username="sys as sysdba" -Dks.impex.username=RICEMYUNI -Dks.impex.password=RICEMYUNI
 ```
 
 - Edit the mvn clean install command above to use whatever your "sys as sysdba" password is
@@ -76,7 +76,7 @@ mvn clean install -Pks-db,oracle -Dumd.cm.additional.config.locations=C:/Users/c
 ```
 cd /ks-201/student-2.0.1-cm/ks-deployments/ks-web/ks-rice-standalone
 set MAVEN_OPTS=-Xmx1g -Xss8m -XX:MaxPermSize=512m -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8003
-mvn -DskipTests -Pstandalone tomcat:run-war -Dadditional.config.locations=C:/Users/cmann/kuali/main/myuni20/myuni-rice-config-20.xml
+mvn -Denforcer.skip=true -DskipTests -Pstandalone tomcat:run-war -Dadditional.config.locations=C:/Users/cmann/kuali/main/myuni20/myuni-rice-config-20.xml
 ```
 Note: Setting the MAVEN_OPTS will start the tomcat Rice is running on in debug mode (listening on port 8003).  You can then connect to it
       using the eclipse debugger if you want to see what rice is doing (e.g. calling the post processors etc). 
@@ -129,7 +129,7 @@ run rice and cm in same tomcat instance in DEV and QA (they used the same variab
 
 # Dump Rice SQL
 
-- Copy spy.properties to rice dir (it will log to file c:\temp\
+- Copy spy.properties to rice dir (this spy.properties is excluding the KSBR tables to cut down on logging noise. You must use v1.1 (not 1.3) of p6spy for exclusion to work properly) 
 ```
 cp C:\Users\cmann\git\ks-loader\ks-loader\training\debug\rice\spy.properties C:\ks-201\student-2.0.1-cm\ks-deployments\ks-web\ks-rice-standalone\src\main\resources
 ```
@@ -139,7 +139,7 @@ cp C:\Users\cmann\git\ks-loader\ks-loader\training\debug\rice\spy.properties C:\
    <dependency>
        <groupId>p6spy</groupId>
        <artifactId>p6spy</artifactId>
-       <version>1.3</version>
+       <version>1.1</version>
    </dependency>
  ```
 - Uncomment P6 lines at the bottom of C:\Users\cmann\kuali\main\myuni20\myuni-rice-config-20.xml 
