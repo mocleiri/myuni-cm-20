@@ -129,7 +129,7 @@ run rice and cm in same tomcat instance in DEV and QA (they used the same variab
 
 # Dump Rice SQL
 
-- Copy spy.properties to rice dir (it will log to file c:\temp\
+- Copy spy.properties to rice dir (this spy.properties is excluding the KSBR tables to cut down on logging noise. You must use v1.1 (not 1.3) of p6spy for exclusion to work properly) 
 ```
 cp C:\Users\cmann\git\ks-loader\ks-loader\training\debug\rice\spy.properties C:\ks-201\student-2.0.1-cm\ks-deployments\ks-web\ks-rice-standalone\src\main\resources
 ```
